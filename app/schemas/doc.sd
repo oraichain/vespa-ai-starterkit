@@ -1,0 +1,57 @@
+schema doc {
+    document doc {
+        field language type string {
+            indexing: "en" | set_language 
+        }
+        field doc_id type string {
+            indexing: attribute | summary
+            match: word
+        }
+        field title type string {
+            indexing: index | summary
+            match: text
+            index: enable-bm25
+        }
+        field text type string {
+            indexing: index | summary
+            match: text
+            index: enable-bm25
+        }
+    }
+    fieldset default {
+        fields: title, text
+    }
+    
+    field embedding type tensor<bfloat16>(v[384]) {
+        indexing: input title." ".input text | embed | attribute | summary
+        attribute {
+            distance-metric: angular
+        }
+    }
+  
+    rank-profile bm25 {
+        first-phase {
+            expression:   bm25(title) + bm25(text)
+        }
+    }
+
+    rank-profile semantic {
+        inputs {
+            query(e) tensor<bfloat16>(v[384])
+        }
+        first-phase {
+            expression:   closeness(field, embedding)
+        }
+    }
+
+    rank-profile recommendation inherits default {
+        inputs {
+            query(user_embedding) tensor<bfloat16>(v[384]) # Declare user_embedding as a tensor input
+        }
+        first-phase {
+            expression:   closeness(field, embedding)
+        }
+    }
+
+    
+}

@@ -1,0 +1,7 @@
+services:
+  vespa:
+    image: vespaengine/vespa    
+    hostname: vespa-container
+    ports:
+      - 19071:19071
+      - 8080:8080
