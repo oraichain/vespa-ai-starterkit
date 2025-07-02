@@ -5,8 +5,10 @@
         <document-processing />
         <document-api />
         <component id="arctic" type="hugging-face-embedder">
-            <transformer-model url="https://huggingface.co/Snowflake/snowflake-arctic-embed-xs/resolve/main/onnx/model_quantized.onnx"/>
-            <tokenizer-model url="https://huggingface.co/Snowflake/snowflake-arctic-embed-xs/raw/main/tokenizer.json"/>
+            <transformer-model
+                url="https://huggingface.co/Snowflake/snowflake-arctic-embed-xs/resolve/main/onnx/model_quantized.onnx" />
+            <tokenizer-model
+                url="https://huggingface.co/Snowflake/snowflake-arctic-embed-xs/raw/main/tokenizer.json" />
             <pooling-strategy>cls</pooling-strategy>
             <prepend>
                 <query>Represent this sentence for searching relevant passages: </query>
@@ -19,5 +21,11 @@
         <documents>
             <document type="doc" mode="index" />
         </documents>
+        <tuning>
+            <resource-limits>
+                <disk>0.78</disk>
+                <memory>0.77</memory>
+            </resource-limits>
+        </tuning>
     </content>
 </services>
